@@ -82,10 +82,11 @@ func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []st
 func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeStubInterface, container_id string, elements_json string) ([]byte, error) {
 	var key, value string
 	var err error
-	fmt.Println("running write()")
 
 	key = container_id
 	value = elements_json
+	fmt.Println("running ShipContainerUsingLogistics.key:" + key + " value=" + value)
+
 	err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
 	if err != nil {
 		return nil, err
