@@ -84,10 +84,6 @@ func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeS
 	var err error
 	fmt.Println("running write()")
 
-	if len(args) != 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
-	}
-
 	key = container_id
 	value = elements_json
 	err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
