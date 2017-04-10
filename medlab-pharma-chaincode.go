@@ -106,7 +106,7 @@ func (t *MedLabPharmaChaincode) GetContainerDetails(stub shim.ChaincodeStubInter
 		return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
 	}
 
-	key = args[0]
+	key = container_id[0]
 	valAsbytes, err := stub.GetState(container_id)
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
