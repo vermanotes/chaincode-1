@@ -31,7 +31,7 @@ func (t *MedLabPharmaChaincode) Init(stub shim.ChaincodeStubInterface, function 
 
 	// Handle different functions
 	if function == "init" {
-		return t.init(stub, "container is empty")
+		return t.init(stub, args)
 	}
 	fmt.Println("invoke did not find func: " + function)
 	
