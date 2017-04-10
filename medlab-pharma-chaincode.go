@@ -31,9 +31,7 @@ func (t *MedLabPharmaChaincode) Init(stub shim.ChaincodeStubInterface, function 
 
 	// Handle different functions
 	if function == "init" {
-		return t.init(stub, args)
-	} else if function == "write" {
-		return t.write(stub, args)
+		return t.init(stub, "container is empty")
 	}
 	fmt.Println("invoke did not find func: " + function)
 	
@@ -44,6 +42,14 @@ func (t *MedLabPharmaChaincode) Init(stub shim.ChaincodeStubInterface, function 
 func (t *MedLabPharmaChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
 
+	// Handle different functions
+	if function == "shipContainerUsingLogistics" {
+		return t.init(stub, "container is empty")
+	} else if function == "acceptContainerbyLogistics" {
+		return t.write(stub, args)
+	}
+	fmt.Println("invoke did not find func: " + function)
+	
 	return nil, errors.New("Received unknown function invocation: " + function)
 }
 
@@ -65,7 +71,7 @@ func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []st
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
-	err := stub.PutState("Container", []byte(args[0]))
+	err := stub.PutState("Settings", []byte(args[0]))
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +81,7 @@ func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []st
 
 
 // write - invoke function to write key/value pair
-func (t *MedLabPharmaChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var key, value string
 	var err error
 	fmt.Println("running write()")
