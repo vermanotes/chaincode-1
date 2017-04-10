@@ -107,7 +107,7 @@ func (t *MedLabPharmaChaincode) GetContainerDetails(stub shim.ChaincodeStubInter
 	}
 
 	key = container_id[0]
-	valAsbytes, err := stub.GetState(container_id)
+	valAsbytes, err := stub.GetState(key)
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
 		return nil, errors.New(jsonResp)
