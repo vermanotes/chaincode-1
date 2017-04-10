@@ -44,7 +44,7 @@ func (t *MedLabPharmaChaincode) Invoke(stub shim.ChaincodeStubInterface, functio
 
 	// Handle different functions
 	if function == "shipContainerUsingLogistics" {
-		return t.ShipContainerUsingLogistics(stub, "container is empty")
+		return t.ShipContainerUsingLogistics(stub, args)
 	}
 	fmt.Println("invoke did not find func: " + function)
 	
