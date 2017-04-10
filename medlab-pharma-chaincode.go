@@ -31,7 +31,7 @@ func (t *MedLabPharmaChaincode) Init(stub shim.ChaincodeStubInterface, function 
 
 	// Handle different functions
 	if function == "init" {
-		return t.init(stub, "arshad")
+		return t.init(stub, args)
 	} else if function == "write" {
 		return t.write(stub, args)
 	}
