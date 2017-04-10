@@ -31,7 +31,7 @@ func (t *MedLabPharmaChaincode) Init(stub shim.ChaincodeStubInterface, function 
 
 	// Handle different functions
 	if function == "init" {
-		return t.Init(stub, "init", args)
+		return init(stub, "arshad")
 	} else if function == "write" {
 		return t.write(stub, args)
 	}
@@ -60,7 +60,7 @@ func (t *MedLabPharmaChaincode) Query(stub shim.ChaincodeStubInterface, function
 }
 
 
-func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
