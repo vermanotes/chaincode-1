@@ -79,7 +79,7 @@ func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []st
 
 
 // write - invoke function to write key/value pair
-func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeStubInterface, container_id string, elements_json string) ([]byte, error) {
 	var key, value string
 	var err error
 	fmt.Println("running write()")
@@ -88,8 +88,8 @@ func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeS
 		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
 	}
 
-	key = args[0] //rename for funsies
-	value = args[1]
+	key = container_id
+	value = elements_json
 	err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
 	if err != nil {
 		return nil, err
