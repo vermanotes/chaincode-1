@@ -60,7 +60,7 @@ func (t *MedLabPharmaChaincode) Query(stub shim.ChaincodeStubInterface, function
 }
 
 
-func (t *MedLabPharmaChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
