@@ -102,7 +102,7 @@ func (t *MedLabPharmaChaincode) getContainerDetails(stub shim.ChaincodeStubInter
 	var key, jsonResp string
 	var err error
 
-	if len(args) != 1 {
+	if len(container_id) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
 	}
 
