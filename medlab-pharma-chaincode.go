@@ -1,9 +1,9 @@
 
 /**
-@author: Sushil Verma
+@author: Arshad Sarfarz
 @version: 1.0.0
-@date: 07/04/2017
-@Description: MedLab-Pharma chaincode
+@date: 10/04/2017
+@Description: MedLab-Pharma chaincode v1
 **/
 
 package main
@@ -98,7 +98,7 @@ func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeS
 }
 
 // read - query function to read key/value pair
-func (t *MedLabPharmaChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func (t *MedLabPharmaChaincode) getContainerDetails(stub shim.ChaincodeStubInterface, container_id []string) ([]byte, error) {
 	var key, jsonResp string
 	var err error
 
@@ -107,7 +107,7 @@ func (t *MedLabPharmaChaincode) read(stub shim.ChaincodeStubInterface, args []st
 	}
 
 	key = args[0]
-	valAsbytes, err := stub.GetState(key)
+	valAsbytes, err := stub.GetState(container_id)
 	if err != nil {
 		jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
 		return nil, errors.New(jsonResp)
