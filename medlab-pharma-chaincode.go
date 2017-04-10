@@ -56,8 +56,8 @@ func (t *MedLabPharmaChaincode) Query(stub shim.ChaincodeStubInterface, function
 	fmt.Println("query is running " + function)
 	
 	// Handle different functions
-	if function == "read" { //read a variable
-		return t.read(stub, args)
+	if function == "getcontainerdetails" { //read a variable
+		return t.GetContainerDetails(stub, args)
 	}
 	fmt.Println("query did not find func: " + function)
 	return nil, errors.New("Received unknown function query: " + function)
@@ -98,7 +98,7 @@ func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeS
 }
 
 // read - query function to read key/value pair
-func (t *MedLabPharmaChaincode) getContainerDetails(stub shim.ChaincodeStubInterface, container_id []string) ([]byte, error) {
+func (t *MedLabPharmaChaincode) GetContainerDetails(stub shim.ChaincodeStubInterface, container_id []string) ([]byte, error) {
 	var key, jsonResp string
 	var err error
 
