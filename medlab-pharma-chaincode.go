@@ -67,17 +67,13 @@ func (t *MedLabPharmaChaincode) Query(stub shim.ChaincodeStubInterface, function
 	if function == "GetContainerDetails" { //read a variable
 		return t.GetContainerDetails(stub, args)
 	} else if function == "GetMaxIDValue" {
-		return t.GetMaxIDValue(stub, args)
+		return t.GetMaxIDValue(stub)
 	}
 	fmt.Println("query did not find func: " + function)
 	return nil, errors.New("Received unknown function query: " + function)
 }
 
 func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 1")
-	}
-
 	maxIDCounter := UniqueIDCounter{
 		ContainerMaxID: 0,
 		PalletMaxID:    0}
@@ -126,7 +122,7 @@ func (t *MedLabPharmaChaincode) GetContainerDetails(stub shim.ChaincodeStubInter
 }
 
 //Returns the maximum number used for ContainerID and PalletID in the format "ContainerMaxNumber, PalletMaxNumber"
-func (t *MedLabPharmaChaincode) GetMaxIDValue(stub shim.ChaincodeStubInterface, container_id []string) ([]byte, error) {
+func (t *MedLabPharmaChaincode) GetMaxIDValue(stub shim.ChaincodeStubInterface) ([]byte, error) {
 	var jsonResp string
 	var err error
 	ConMaxAsbytes, err := stub.GetState(UniqueIDCounterKey)
