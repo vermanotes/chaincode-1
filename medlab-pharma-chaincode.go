@@ -75,8 +75,8 @@ func (t *MedLabPharmaChaincode) Query(stub shim.ChaincodeStubInterface, function
 
 func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	maxIDCounter := UniqueIDCounter{
-		ContainerMaxID: 0,
-		PalletMaxID:    0}
+		ContainerMaxID: 1,
+		PalletMaxID:    1}
 	jsonVal, _ := json.Marshal(maxIDCounter)
 	err := stub.PutState(UniqueIDCounterKey, []byte(jsonVal))
 	if err != nil {
