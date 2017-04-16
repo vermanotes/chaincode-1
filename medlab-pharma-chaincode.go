@@ -1,4 +1,3 @@
-
 /**
 @author: Arshad Sarfarz
 @version: 1.0.0
@@ -8,17 +7,26 @@
 
 package main
 
-import(
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"fmt"
+import (
+	"encoding/json"
 	"errors"
+	"fmt"
+
+	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
 type MedLabPharmaChaincode struct {
 }
 
-func main(){
-	fmt.Println("Inside MedLabPharmaChaincode main function");
+type UniqueIDCounter struct {
+	ContainerMaxID int `json:"ContainerMaxID"`
+	PalletMaxID    int `json:"PalletMaxID"`
+}
+
+var UniqueIDCounterKey string = "UniqueIDCounter"
+
+func main() {
+	fmt.Println("Inside MedLabPharmaChaincode main function")
 	err := shim.Start(new(MedLabPharmaChaincode))
 	if err != nil {
 		fmt.Printf("Error starting MedLabPharma chaincode: %s", err)
@@ -26,15 +34,15 @@ func main(){
 }
 
 // Init resets all the things
-func (t *MedLabPharmaChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error){
-	fmt.Printf("Initializing MedLabPharmaChaincode")
+func (t *MedLabPharmaChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	fmt.Println("Initializing MedLabPharmaChaincode-->arshad ")
 
 	// Handle different functions
 	if function == "init" {
 		return t.init(stub, args)
 	}
 	fmt.Println("invoke did not find func: " + function)
-	
+
 	return nil, errors.New("Received unknown function invocation: " + function)
 }
 
@@ -43,40 +51,44 @@ func (t *MedLabPharmaChaincode) Invoke(stub shim.ChaincodeStubInterface, functio
 	fmt.Println("invoke is running " + function)
 
 	// Handle different functions
-	if function == "shipContainerUsingLogistics" {
+	if function == "ShipContainerUsingLogistics" {
 		return t.ShipContainerUsingLogistics(stub, args[0], args[1])
 	}
 	fmt.Println("invoke did not find func: " + function)
-	
+
 	return nil, errors.New("Received unknown function invocation: " + function)
 }
 
 // Query is our entry point for queries
 func (t *MedLabPharmaChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("query is running " + function)
-	
+
 	// Handle different functions
-	if function == "getcontainerdetails" { //read a variable
+	if function == "GetContainerDetails" { //read a variable
 		return t.GetContainerDetails(stub, args)
+	} else if function == "GetMaxIDValue" {
+		return t.GetMaxIDValue(stub, args)
 	}
 	fmt.Println("query did not find func: " + function)
 	return nil, errors.New("Received unknown function query: " + function)
 }
-
 
 func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
-	err := stub.PutState("Settings", []byte(args[0]))
+	maxIDCounter := UniqueIDCounter{
+		ContainerMaxID: 0,
+		PalletMaxID:    0}
+	jsonVal, _ := json.Marshal(maxIDCounter)
+	err := stub.PutState(UniqueIDCounterKey, []byte(jsonVal))
 	if err != nil {
 		return nil, err
 	}
 
 	return nil, nil
 }
-
 
 // write - invoke function to write key/value pair
 func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeStubInterface, container_id string, elements_json string) ([]byte, error) {
@@ -111,4 +123,16 @@ func (t *MedLabPharmaChaincode) GetContainerDetails(stub shim.ChaincodeStubInter
 	}
 
 	return valAsbytes, nil
+}
+
+//Returns the maximum number used for ContainerID and PalletID in the format "ContainerMaxNumber, PalletMaxNumber"
+func (t *MedLabPharmaChaincode) GetMaxIDValue(stub shim.ChaincodeStubInterface, container_id []string) ([]byte, error) {
+	var jsonResp string
+	var err error
+	ConMaxAsbytes, err := stub.GetState(UniqueIDCounterKey)
+	if err != nil {
+		jsonResp = "{\"Error\":\"Failed to get state for ContainerMaxNumber \"}"
+		return nil, errors.New(jsonResp)
+	}
+	return ConMaxAsbytes, nil
 }
