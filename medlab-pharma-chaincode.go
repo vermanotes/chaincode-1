@@ -93,7 +93,8 @@ func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []st
 func (t *MedLabPharmaChaincode) TestInvokeFunction(stub shim.ChaincodeStubInterface, test_message string) ([]byte, error) {
 	fmt.Println("***** Inside TestInvokeFunction() func...")
 	fmt.Println("***** Hello " + test_message)
-	return "TestInvokeFunction success", nil
+	var message := []byte("TestInvokeFunction success")
+	return message, nil
 }
 
 // write - invoke function to write key/value pair
