@@ -26,7 +26,7 @@ type UniqueIDCounter struct {
 var UniqueIDCounterKey string = "UniqueIDCounter"
 
 func main() {
-	fmt.Println("Inside MedLabPharmaChaincode main function")
+	fmt.Println("***** Inside MedLabPharmaChaincode main function")
 	err := shim.Start(new(MedLabPharmaChaincode))
 	if err != nil {
 		fmt.Printf("Error starting MedLabPharma chaincode: %s", err)
@@ -35,7 +35,7 @@ func main() {
 
 // Init resets all the things
 func (t *MedLabPharmaChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	fmt.Println("Initializing MedLabPharmaChaincode-->arshad ")
+	fmt.Println("***** Initializing MedLabPharmaChaincode-->arshad ")
 
 	// Handle different functions
 	if function == "init" {
@@ -48,11 +48,13 @@ func (t *MedLabPharmaChaincode) Init(stub shim.ChaincodeStubInterface, function 
 
 // Invoke isur entry point to invoke a chaincode function
 func (t *MedLabPharmaChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	fmt.Println("invoke is running " + function)
+	fmt.Println("***** Invoke is running " + function)
 
 	// Handle different functions
 	if function == "ShipContainerUsingLogistics" {
 		return t.ShipContainerUsingLogistics(stub, args[0], args[1])
+	}else if function == "TestInvokeFunction"{
+		return r.TestInvokeFunction(stub, args[0])
 	}
 	fmt.Println("invoke did not find func: " + function)
 
@@ -61,7 +63,7 @@ func (t *MedLabPharmaChaincode) Invoke(stub shim.ChaincodeStubInterface, functio
 
 // Query is our entry point for queries
 func (t *MedLabPharmaChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	fmt.Println("query is running " + function)
+	fmt.Println("***** Query is running " + function)
 
 	// Handle different functions
 	if function == "GetContainerDetails" { //read a variable
@@ -74,6 +76,8 @@ func (t *MedLabPharmaChaincode) Query(stub shim.ChaincodeStubInterface, function
 }
 
 func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	fmt.Println("***** Inside init() func...")
+
 	maxIDCounter := UniqueIDCounter{
 		ContainerMaxID: 1,
 		PalletMaxID:    1}
@@ -86,8 +90,16 @@ func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []st
 	return nil, nil
 }
 
+func (t *MedLabPharmaChaincode) TestInvokeFunction(stub shim.ChaincodeStubInterface, test_message string) ([]byte, error) {
+	fmt.Println("***** Inside TestInvokeFunction() func...")
+	fmt.Println("***** Hello " + test_message)
+	return "TestInvokeFunction success", nil
+}
+
 // write - invoke function to write key/value pair
 func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeStubInterface, container_id string, elements_json string) ([]byte, error) {
+	fmt.Println("***** Inside ShipContainerUsingLogistics() func...")
+
 	var key, value string
 	var err error
 
@@ -104,6 +116,8 @@ func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeS
 
 // read - query function to read key/value pair
 func (t *MedLabPharmaChaincode) GetContainerDetails(stub shim.ChaincodeStubInterface, container_id []string) ([]byte, error) {
+	fmt.Println("***** Inside GetContainerDetails() func...")
+
 	var key, jsonResp string
 	var err error
 
@@ -123,6 +137,7 @@ func (t *MedLabPharmaChaincode) GetContainerDetails(stub shim.ChaincodeStubInter
 
 //Returns the maximum number used for ContainerID and PalletID in the format "ContainerMaxNumber, PalletMaxNumber"
 func (t *MedLabPharmaChaincode) GetMaxIDValue(stub shim.ChaincodeStubInterface) ([]byte, error) {
+	fmt.Println("***** Inside GetMaxIDValue() func...")
 	var jsonResp string
 	var err error
 	ConMaxAsbytes, err := stub.GetState(UniqueIDCounterKey)
