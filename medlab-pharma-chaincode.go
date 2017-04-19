@@ -53,10 +53,19 @@ func (t *MedLabPharmaChaincode) Invoke(stub shim.ChaincodeStubInterface, functio
 	// Handle different functions
 	if function == "ShipContainerUsingLogistics" {
 		return t.ShipContainerUsingLogistics(stub, args[0], args[1])
+	} else if function == "TestInvokeFunction"{
+		return r.TestInvokeFunction(stub, args[0])
 	}
 	fmt.Println("invoke did not find func: " + function)
 
 	return nil, errors.New("Received unknown function invocation: " + function)
+}
+
+//Adding function for testing Invoke
+func (t *MedLabPharmaChaincode) TestInvokeFunction(stub shim.ChaincodeStubInterface, test_message string) ([]byte, error) {
+	fmt.Println("***** Inside TestInvokeFunction() func...")
+	fmt.Println("***** Hello " + test_message)
+	return "TestInvokeFunction success", nil
 }
 
 // Query is our entry point for queries
