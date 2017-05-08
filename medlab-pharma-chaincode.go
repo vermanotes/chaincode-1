@@ -75,6 +75,7 @@ func (t *MedLabPharmaChaincode) TestInvokeFunction(stub shim.ChaincodeStubInterf
 }
 
 func (t *MedLabPharmaChaincode) GetUserRole(stub shim.ChaincodeStubInterface) (string) {
+	fmt.Println("***** Inside GetUserRole() func...")
 	userRole, err := stub.ReadCertAttribute("username")
 	fmt.Println(userRole)
 	fmt.Println(err)
