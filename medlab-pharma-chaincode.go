@@ -45,8 +45,8 @@ func (t *MedLabPharmaChaincode) Invoke(stub shim.ChaincodeStubInterface, functio
 	if function == "TestInvokeFunction"{
 		return t.TestInvokeFunction(stub, args[0])
 	}else if function == "GetUserRole" {
-		userType := t.GetUserRole(stub)
-		fmt.Println("***** userType " + userType)
+		attributeValue := t.GetUserRole(stub, args[0])
+		fmt.Println("***** attributeValue " + attributeValue)
 		return nil, nil
 	}
 
@@ -74,15 +74,15 @@ func (t *MedLabPharmaChaincode) TestInvokeFunction(stub shim.ChaincodeStubInterf
 	return nil, nil
 }
 
-func (t *MedLabPharmaChaincode) GetUserRole(stub shim.ChaincodeStubInterface) (string) {
-	fmt.Println("***** Inside GetUserRole() func...")
-	userRole, err := stub.ReadCertAttribute("username")
-	fmt.Println(userRole)
+func (t *MedLabPharmaChaincode) GetUserRole(stub shim.ChaincodeStubInterface, attributeName string) (string) {
+	fmt.Println("***** Inside GetUserRole() func for attribute:" + attributeName)
+	attributeValue, err := stub.ReadCertAttribute(attributeName)
+	fmt.Println(attributeValue)
 	fmt.Println(err)
 	
 	if err != nil {
 	    return "Couldn't get attribute 'userRole'. Error: ";
 	}
-	return string(userRole)
+	return string(attributeValue)
 }
 
