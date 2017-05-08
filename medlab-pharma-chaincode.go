@@ -1,8 +1,7 @@
 /**
-@author: Arshad Sarfarz
+@author: Sushil Verma
 @version: 1.0.0
-@date: 10/04/2017
-@Description: MedLab-Pharma chaincode v1
+@date: 08-05-2017
 **/
 
 package main
@@ -17,13 +16,6 @@ import (
 
 type MedLabPharmaChaincode struct {
 }
-
-type UniqueIDCounter struct {
-	ContainerMaxID int `json:"ContainerMaxID"`
-	PalletMaxID    int `json:"PalletMaxID"`
-}
-
-var UniqueIDCounterKey string = "UniqueIDCounter"
 
 func main() {
 	fmt.Println("***** Inside MedLabPharmaChaincode main function")
@@ -51,11 +43,14 @@ func (t *MedLabPharmaChaincode) Invoke(stub shim.ChaincodeStubInterface, functio
 	fmt.Println("***** Invoke is running " + function)
 
 	// Handle different functions
-	if function == "ShipContainerUsingLogistics" {
-		return t.ShipContainerUsingLogistics(stub, args[0], args[1])
-	}else if function == "TestInvokeFunction"{
+	if function == "TestInvokeFunction"{
 		return t.TestInvokeFunction(stub, args[0])
+	}else if function == "GetCertValues" {
+		userType := t.GetCertValues(stub)
+		fmt.Println("***** userType " + userType)
+		return nil, nil
 	}
+
 	fmt.Println("invoke did not find func: " + function)
 
 	return nil, errors.New("Received unknown function invocation: " + function)
@@ -64,86 +59,28 @@ func (t *MedLabPharmaChaincode) Invoke(stub shim.ChaincodeStubInterface, functio
 // Query is our entry point for queries
 func (t *MedLabPharmaChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("***** Query is running " + function)
-
-	// Handle different functions
-	if function == "GetContainerDetails" { //read a variable
-		return t.GetContainerDetails(stub, args)
-	} else if function == "GetMaxIDValue" {
-		return t.GetMaxIDValue(stub)
-	}
 	fmt.Println("query did not find func: " + function)
 	return nil, errors.New("Received unknown function query: " + function)
 }
 
 func (t *MedLabPharmaChaincode) init(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	fmt.Println("***** Inside init() func...")
-
-	maxIDCounter := UniqueIDCounter{
-		ContainerMaxID: 1,
-		PalletMaxID:    1}
-	jsonVal, _ := json.Marshal(maxIDCounter)
-	err := stub.PutState(UniqueIDCounterKey, []byte(jsonVal))
-	if err != nil {
-		return nil, err
-	}
-
 	return nil, nil
 }
 
 func (t *MedLabPharmaChaincode) TestInvokeFunction(stub shim.ChaincodeStubInterface, test_message string) ([]byte, error) {
 	fmt.Println("***** Inside TestInvokeFunction() func...")
 	fmt.Println("***** Hello " + test_message)
+	fmt.Println("TestInvokeFunction success")
 	return nil, nil
 }
 
-// write - invoke function to write key/value pair
-func (t *MedLabPharmaChaincode) ShipContainerUsingLogistics(stub shim.ChaincodeStubInterface, container_id string, elements_json string) ([]byte, error) {
-	fmt.Println("***** Inside ShipContainerUsingLogistics() func...")
-
-	var key, value string
-	var err error
-
-	key = container_id
-	value = elements_json
-	fmt.Println("running ShipContainerUsingLogistics.key:" + key + " value=" + value)
-
-	err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
+func (t *MedLabPharmaChaincode) GetCertValues(stub shim.ChaincodeStubInterface) (string, error) {
+	username, err := stub.ReadCertAttribute("username")
+	fmt.Println(username)
 	if err != nil {
-		return nil, err
+		return "", errors.New("Couldn't get attribute 'username'. Error: " + err.Error())
 	}
-	return nil, nil
+	return string(username), nil
 }
 
-// read - query function to read key/value pair
-func (t *MedLabPharmaChaincode) GetContainerDetails(stub shim.ChaincodeStubInterface, container_id []string) ([]byte, error) {
-	fmt.Println("***** Inside GetContainerDetails() func...")
-
-	var key, jsonResp string
-	var err error
-
-	if len(container_id) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
-	}
-
-	key = container_id[0]
-	valAsbytes, err := stub.GetState(key)
-	if err != nil {
-		jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
-		return nil, errors.New(jsonResp)
-	}
-
-	return valAsbytes, nil
-}
-
-//Returns the maximum number used for ContainerID and PalletID in the format "ContainerMaxNumber, PalletMaxNumber"
-func (t *MedLabPharmaChaincode) GetMaxIDValue(stub shim.ChaincodeStubInterface) ([]byte, error) {
-	fmt.Println("***** Inside GetMaxIDValue() func...")
-	var jsonResp string
-	var err error
-	ConMaxAsbytes, err := stub.GetState(UniqueIDCounterKey)
-	if err != nil {
-		jsonResp = "{\"Error\":\"Failed to get state for ContainerMaxNumber \"}"
-		return nil, errors.New(jsonResp)
-	}
-	return ConMaxAsbytes, nil
-}
