@@ -44,8 +44,8 @@ func (t *MedLabPharmaChaincode) Invoke(stub shim.ChaincodeStubInterface, functio
 	// Handle different functions
 	if function == "TestInvokeFunction"{
 		return t.TestInvokeFunction(stub, args[0])
-	}else if function == "GetCertValues" {
-		userType := t.GetCertValues(stub)
+	}else if function == "GetUserRole" {
+		userType := t.GetUserRole(stub)
 		fmt.Println("***** userType " + userType)
 		return nil, nil
 	}
@@ -74,14 +74,14 @@ func (t *MedLabPharmaChaincode) TestInvokeFunction(stub shim.ChaincodeStubInterf
 	return nil, nil
 }
 
-func (t *MedLabPharmaChaincode) GetCertValues(stub shim.ChaincodeStubInterface) (string) {
-	username, err := stub.ReadCertAttribute("username")
-	fmt.Println(username)
+func (t *MedLabPharmaChaincode) GetUserRole(stub shim.ChaincodeStubInterface) (string) {
+	userRole, err := stub.ReadCertAttribute("username")
+	fmt.Println(userRole)
 	fmt.Println(err)
 	
 	if err != nil {
-		return "Couldn't get attribute 'username'. Error: ";
+	    return "Couldn't get attribute 'userRole'. Error: ";
 	}
-	return string(username)
+	return string(userRole)
 }
 
