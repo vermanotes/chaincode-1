@@ -80,7 +80,7 @@ func (t *MedLabPharmaChaincode) GetCertValues(stub shim.ChaincodeStubInterface) 
 	fmt.Println(err)
 	
 	if err != nil {
-		return "", errors.New("Couldn't get attribute 'username'. Error: " + err.Error())
+		return "Couldn't get attribute 'username'. Error: ";
 	}
 	return string(username)
 }
